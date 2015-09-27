@@ -56,17 +56,16 @@ void ofApp::setup(){
             {
                 vector<double> sample;
                 for(int j = 0; j < gestureCount; j++) {
-//                    sample.push_back(result[gestureIds[j]].asDouble());
+                    // TODO: get actual sample data from JSON file
+                    //                    sample.push_back(result[gestureIds[j]].asDouble());
                     sample.push_back(ofRandom(1.0));
                 }
                 
-                // TODO: create GRT data point
+                // add GRT data point
                 GRTtrainingData.addSample(i+1, sample);
-                // TODO: load associated image
-//                images[i]->loadImage(imgDir.getFile(i).getBaseName());
                 
-                // debug output //
-                //            ofLogNotice("ofApp::setup() -- result.getRawString() = ") << endl << result.getRawString() << endl;
+                // TODO: load associated image
+                //                images[i]->loadImage(imgDir.getFile(i).getBaseName());
             }
             else
             {
@@ -84,7 +83,6 @@ void ofApp::setup(){
             trainedData = true;
             GRTpipeline.save("GRTpipeline");
         }
-        // TODO: create
     }
 }
 
@@ -98,6 +96,7 @@ void ofApp::update(){
     }
     
     if (trainedData) {
+        // TODO: predict label
     }
 }
 
@@ -109,6 +108,7 @@ void ofApp::draw(){
     tracker.draw();
     
     if (trainedData) {
+        // TODO: draw predicted image
     }
     
     int w = 100, h = 12;
@@ -159,6 +159,8 @@ void ofApp::keyPressed(int key){
     if(key == 'l') {
         classifier.load("expressions");
     }
+    
+    // TODO: set up key presses for different rendering modes
 }
 
 //--------------------------------------------------------------
