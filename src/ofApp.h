@@ -4,6 +4,8 @@
 #include "ofxFaceTracker.h"
 #include "GRT.h"
 
+using namespace ofxCv;
+using namespace cv;
 using namespace GRT;
 
 

@@ -1,8 +1,5 @@
 #include "ofApp.h"
 
-using namespace ofxCv;
-using namespace cv;
-
 //--------------------------------------------------------------
 void ofApp::setup(){
     cout << "Hello World!";
