@@ -6,6 +6,12 @@ using namespace cv;
 //--------------------------------------------------------------
 void ofApp::setup(){
     cout << "Hello World!";
+    
+    ofSetVerticalSync(true);
+    cam.initGrabber(640, 480);
+    
+    tracker.setup();
+    tracker.setRescale(.5);
 }
 
 //--------------------------------------------------------------
