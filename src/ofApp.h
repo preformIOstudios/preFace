@@ -9,7 +9,6 @@ using namespace ofxCv;
 using namespace cv;
 using namespace GRT;
 
-
 class ofApp : public ofBaseApp{
 
 public:
@@ -34,4 +33,9 @@ public:
     ofxJSONElement result;
 
     vector<ofImage*> images;
+    
+    GestureRecognitionPipeline GRTpipeline;
+    ClassificationData  GRTtrainingData;
+    bool    trainedData;
+    
 };

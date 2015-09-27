@@ -28,6 +28,9 @@ int gestureCount = 8;
 void ofApp::setup(){
     cout << "Hello World!" << endl;
     
+    trainedData = false;
+    GRTtrainingData.setNumDimensions(8);
+    
     ofSetVerticalSync(true);
     cam.initGrabber(640, 480);
     
@@ -36,8 +39,7 @@ void ofApp::setup(){
     
     classifier.load("expressions");
     
-    //TODO:
-    // - scan for all JSON files in "images" directory
+    // list all JSON files in "images" directory
     ofDirectory imgDir("images");
     imgDir.allowExt("json");
     imgDir.listDir();
@@ -45,17 +47,23 @@ void ofApp::setup(){
     if (imgDir.numFiles()) {
         images.resize(imgDir.numFiles());
         
+        // create GRT data and load images for each JSON file
         for(int i = 0; i < imgDir.numFiles(); i++){
             
             bool parsingSuccessful = result.open(imgDir.getPath(i));
             
             if (parsingSuccessful)
             {
-                //TODO:
-                // - create GRT data from JSON files
-                // - load images
+                vector<double> sample;
+                for(int j = 0; j < gestureCount; j++) {
+//                    sample.push_back(result[gestureIds[j]].asDouble());
+                    sample.push_back(ofRandom(1.0));
+                }
                 
-                
+                // TODO: create GRT data point
+                GRTtrainingData.addSample(i+1, sample);
+                // TODO: load associated image
+//                images[i]->loadImage(imgDir.getFile(i).getBaseName());
                 
                 // debug output //
                 //            ofLogNotice("ofApp::setup() -- result.getRawString() = ") << endl << result.getRawString() << endl;
@@ -66,6 +74,17 @@ void ofApp::setup(){
             }
             cout << "ofApp::setup() -- imgDir.getPath(i) = \"" << imgDir.getPath(i) << "\"" << endl;
         }
+        
+        GRTtrainingData.save(ofToDataPath("GRTtrainingData.grt"));
+        GRTpipeline.setClassifier( KNN() );
+        if( !GRTpipeline.train(GRTtrainingData)  ){
+            cout << "ofApp::setup() -- ERROR: Failed to train the pipeline!\n";
+        } else {
+            cout << "ofApp::setup() -- trained the pipeline!\n";
+            trainedData = true;
+            GRTpipeline.save("GRTpipeline");
+        }
+        // TODO: create
     }
 }
 
@@ -77,6 +96,9 @@ void ofApp::update(){
             classifier.classify(tracker);
         }		
     }
+    
+    if (trainedData) {
+    }
 }
 
 //--------------------------------------------------------------
@@ -85,6 +107,9 @@ void ofApp::draw(){
     ofSetColor(255);
     cam.draw(0, 0);
     tracker.draw();
+    
+    if (trainedData) {
+    }
     
     int w = 100, h = 12;
     ofPushStyle();
