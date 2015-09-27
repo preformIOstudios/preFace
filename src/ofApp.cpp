@@ -26,6 +26,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    ofBackground(0);
     ofSetColor(255);
     cam.draw(0, 0);
     tracker.draw();
@@ -59,17 +60,25 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    switch (key){
-            
-        case 'f':
-        case 'F':
-            ofToggleFullscreen();
-            break;
-            
-        default:
-            break;
+    if(key == 'f' || key == 'F'){
+        ofToggleFullscreen();
     }
-
+    if(key == 'r') {
+        tracker.reset();
+        classifier.reset();
+    }
+    if(key == 'e') {
+        classifier.addExpression();
+    }
+    if(key == 'a') {
+        classifier.addSample(tracker);
+    }
+    if(key == 's') {
+        classifier.save("expressions");
+    }
+    if(key == 'l') {
+        classifier.load("expressions");
+    }
 }
 
 //--------------------------------------------------------------
