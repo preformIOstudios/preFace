@@ -81,7 +81,7 @@ void ofApp::setup(){
         } else {
             cout << "ofApp::setup() -- trained the pipeline!\n";
             trainedData = true;
-            GRTpipeline.save("GRTpipeline");
+            GRTpipeline.save(ofToDataPath("GRTpipeline.grt"));
         }
     }
 }
