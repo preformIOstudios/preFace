@@ -2,6 +2,10 @@
 
 #include "ofMain.h"
 #include "ofxFaceTracker.h"
+#include "GRT.h"
+
+using namespace GRT;
+
 
 class ofApp : public ofBaseApp{
 
