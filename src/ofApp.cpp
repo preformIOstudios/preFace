@@ -58,8 +58,8 @@ void ofApp::setup(){
                 vector<double> sample;
                 for(int j = 0; j < gestureCount; j++) {
                     // TODO: get actual sample data from JSON file
-//                    sample.push_back(result[gestureIds[j]].asDouble());
-                    sample.push_back(ofRandom(100.0));
+                    sample.push_back(result[gestureNames[gestureIds[j]]].asDouble());
+                    //                    sample.push_back(ofRandom(100.0));
                 }
                 
                 // add GRT data point
@@ -109,8 +109,11 @@ void ofApp::update(){
             sample.push_back(tracker.getGesture(gestureIds[j]));
         }
 
-        predictedLabel = GRTpipeline.predict(sample); // TODO: this seems to always predict label 1
-        predictedLabel = ofRandom(images.size()); // TODO: remove random label generation?
+        if(GRTpipeline.predict(sample)) {
+            predictedLabel = GRTpipeline.getPredictedClassLabel();
+        }
+        // TODO: this seems to always predict label 1
+        // predictedLabel = ofRandom(images.size()); // TODO: remove random label generation?
         cout << "ofApp::update() -- sample = " << ofToString(sample) << endl;
         cout << "ofApp::update() -- predictedLabel = " << predictedLabel << endl;
     }
