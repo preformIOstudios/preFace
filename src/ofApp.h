@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxFaceTracker.h"
 
 class ofApp : public ofBaseApp{
 
@@ -19,4 +20,8 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
+        ofVideoGrabber cam;
+        ofxFaceTracker tracker;
+        ExpressionClassifier classifier;
+
 };
