@@ -1,14 +1,72 @@
 #include "ofApp.h"
 
+ofxFaceTracker::Gesture gestureIds[] = {
+    ofxFaceTracker::MOUTH_WIDTH,
+    ofxFaceTracker::MOUTH_HEIGHT,
+    ofxFaceTracker::LEFT_EYEBROW_HEIGHT,
+    ofxFaceTracker::RIGHT_EYEBROW_HEIGHT,
+    ofxFaceTracker::LEFT_EYE_OPENNESS,
+    ofxFaceTracker::RIGHT_EYE_OPENNESS,
+    ofxFaceTracker::JAW_OPENNESS,
+    ofxFaceTracker::NOSTRIL_FLARE
+};
+
+string gestureNames[] = {
+    "mouthWidth",
+    "mouthHeight",
+    "leftEyebrowHeight",
+    "rightEyebrowHeight",
+    "leftEyeOpenness",
+    "rightEyeOpenness",
+    "jawOpenness",
+    "nostrilFlare"
+};
+
+int gestureCount = 8;
+
 //--------------------------------------------------------------
 void ofApp::setup(){
-    cout << "Hello World!";
+    cout << "Hello World!" << endl;
     
     ofSetVerticalSync(true);
     cam.initGrabber(640, 480);
     
     tracker.setup();
     tracker.setRescale(.5);
+    
+    classifier.load("expressions");
+    
+    //TODO:
+    // - scan for all JSON files in "images" directory
+    ofDirectory imgDir("images");
+    imgDir.allowExt("json");
+    imgDir.listDir();
+    
+    if (imgDir.numFiles()) {
+        images.resize(imgDir.numFiles());
+        
+        for(int i = 0; i < imgDir.numFiles(); i++){
+            
+            bool parsingSuccessful = result.open(imgDir.getPath(i));
+            
+            if (parsingSuccessful)
+            {
+                //TODO:
+                // - create GRT data from JSON files
+                // - load images
+                
+                
+                
+                // debug output //
+                //            ofLogNotice("ofApp::setup() -- result.getRawString() = ") << endl << result.getRawString() << endl;
+            }
+            else
+            {
+                ofLogNotice("ofApp::setup")  << "Failed to parse JSON" << endl;
+            }
+            cout << "ofApp::setup() -- imgDir.getPath(i) = \"" << imgDir.getPath(i) << "\"" << endl;
+        }
+    }
 }
 
 //--------------------------------------------------------------
