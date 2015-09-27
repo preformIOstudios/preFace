@@ -28,6 +28,7 @@ int gestureCount = 8;
 void ofApp::setup(){
     cout << "Hello World!" << endl;
     
+    drawDebug = true;
     trainedData = false;
     predictedLabel = 0;
     GRTtrainingData.setNumDimensions(8);
@@ -47,6 +48,7 @@ void ofApp::setup(){
     
     if (imgDir.numFiles()) {
         images.resize(imgDir.numFiles());
+        positions.resize(imgDir.numFiles());
         
         // create GRT data and load images for each JSON file
         for(int i = 0; i < imgDir.numFiles(); i++){
@@ -67,7 +69,9 @@ void ofApp::setup(){
                 ofImage* img = new ofImage;
                 string imgName = ofToDataPath("images/" + imgDir.getFile(i).getBaseName()+".png");
                 img->loadImage(imgName);
+                cout << "ofApp::setup() -- loading images [" + ofToString(i+1) + " / " + ofToString(imgDir.numFiles()) + "]" << endl;
                 images[i] = img;
+                positions[i] = ofVec4f(result["posX"].asFloat(), result["posY"].asFloat(), result["scale"].asFloat(), 0.0f);
                 
                 cout << "ofApp::setup() -- imgName = " << imgName << endl;
             }
@@ -119,13 +123,27 @@ void ofApp::update(){
 void ofApp::draw(){
     ofBackground(0);
     ofSetColor(255);
-    cam.draw(0, 0);
-    tracker.draw();
+    float camScale = ofGetWidth() / cam.getWidth();
+    cam.draw(0, 0, cam.getWidth()*camScale, cam.getHeight()*camScale);
     
-    if (trainedData && predictedLabel) {
+    if (trainedData && predictedLabel && drawInteractive) {
         // draw predicted image
-        images[predictedLabel-1]->draw(ofGetWidth() / 2.0f, 0);
+        float scale = positions[predictedLabel-1].z * 1.125;
+        int x = (ofGetWidth()  - images[predictedLabel-1]->getWidth()*scale)  / 2;
+        int y = (ofGetHeight() - images[predictedLabel-1]->getHeight()*scale) / 2;
+        int w = images[predictedLabel-1]->getWidth() * scale;
+        int h = images[predictedLabel-1]->getHeight() * scale;
+        images[predictedLabel-1]->draw(x, y, w, h);
     }
+    
+    ofPushMatrix();
+    if (drawSmallDebug) camScale /= 3.0f;
+    
+    ofScale(camScale, camScale);
+
+    if (drawSmallDebug) cam.draw(0, 0);
+    if (drawDebug) tracker.draw();
+    ofPopMatrix();
     
     int w = 100, h = 12;
     ofPushStyle();
@@ -174,6 +192,17 @@ void ofApp::keyPressed(int key){
     }
     if(key == 'l') {
         classifier.load("expressions");
+    }
+    
+    if(key == 'i') {
+        drawInteractive = !drawInteractive;
+    }
+    if(key == 'd') {
+        drawDebug = !drawDebug;
+    }
+    
+    if(key == 'D') {
+        drawSmallDebug = !drawSmallDebug;
     }
     
     // TODO: set up key presses for different rendering modes

@@ -33,10 +33,12 @@ public:
     ofxJSONElement result;
 
     vector<ofImage*> images;
+    vector<ofVec4f> positions;
     
     GestureRecognitionPipeline GRTpipeline;
     ClassificationData  GRTtrainingData;
     bool    trainedData;
+    bool drawInteractive, drawDebug, drawSmallDebug;
     int    predictedLabel;
     
 };
