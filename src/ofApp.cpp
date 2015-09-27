@@ -29,6 +29,7 @@ void ofApp::setup(){
     cout << "Hello World!" << endl;
     
     trainedData = false;
+    predictedLabel = 0;
     GRTtrainingData.setNumDimensions(8);
     
     ofSetVerticalSync(true);
@@ -57,15 +58,20 @@ void ofApp::setup(){
                 vector<double> sample;
                 for(int j = 0; j < gestureCount; j++) {
                     // TODO: get actual sample data from JSON file
-                    //                    sample.push_back(result[gestureIds[j]].asDouble());
-                    sample.push_back(ofRandom(1.0));
+//                    sample.push_back(result[gestureIds[j]].asDouble());
+                    sample.push_back(ofRandom(100.0));
                 }
                 
                 // add GRT data point
                 GRTtrainingData.addSample(i+1, sample);
                 
-                // TODO: load associated image
-                //                images[i]->loadImage(imgDir.getFile(i).getBaseName());
+                // load associated image
+                ofImage* img = new ofImage;
+                string imgName = ofToDataPath("images/" + imgDir.getFile(i).getBaseName()+".png");
+                img->loadImage(imgName);
+                images[i] = img;
+                
+                cout << "ofApp::setup() -- imgName = " << imgName << endl;
             }
             else
             {
@@ -95,8 +101,18 @@ void ofApp::update(){
         }		
     }
     
+    // predict label
     if (trainedData) {
-        // TODO: predict label
+        vector<double> sample;
+
+        for(int j = 0; j < gestureCount; j++) {
+            sample.push_back(tracker.getGesture(gestureIds[j]));
+        }
+
+        predictedLabel = GRTpipeline.predict(sample); // TODO: this seems to always predict label 1
+        predictedLabel = ofRandom(images.size()); // TODO: remove random label generation?
+        cout << "ofApp::update() -- sample = " << ofToString(sample) << endl;
+        cout << "ofApp::update() -- predictedLabel = " << predictedLabel << endl;
     }
 }
 
@@ -107,8 +123,9 @@ void ofApp::draw(){
     cam.draw(0, 0);
     tracker.draw();
     
-    if (trainedData) {
+    if (trainedData && predictedLabel) {
         // TODO: draw predicted image
+        images[predictedLabel-1]->draw(ofGetWidth() / 2.0f, 0);
     }
     
     int w = 100, h = 12;

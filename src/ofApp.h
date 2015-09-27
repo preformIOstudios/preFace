@@ -37,5 +37,6 @@ public:
     GestureRecognitionPipeline GRTpipeline;
     ClassificationData  GRTtrainingData;
     bool    trainedData;
+    int    predictedLabel;
     
 };
