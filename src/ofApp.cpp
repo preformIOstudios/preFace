@@ -16,7 +16,12 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    cam.update();
+    if(cam.isFrameNew()) {
+        if(tracker.update(toCv(cam))) {
+            classifier.classify(tracker);
+        }		
+    }
 }
 
 //--------------------------------------------------------------
